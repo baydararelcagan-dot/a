@@ -1,0 +1,115 @@
+import random
+import time
+
+dragon = {}
+dragon['Sağlık'] = 3
+dragon['Güç'] = 5
+
+elf = {}
+elf['Sağlık'] = 4
+elf['Güç'] = 3
+
+orc = {}
+orc['Sağlık'] = 2
+orc['Güç'] = 2
+
+goblin = {}
+goblin['Sağlık'] = 3
+goblin['Güç'] = 1
+
+hobbit = {}
+hobbit['Sağlık'] = 10
+hobbit['Güç'] = 7
+
+arel = {}
+arel['Sağlık'] = 9
+arel['Güç'] = 8
+
+# Kart listeleri (Desteler)
+cards = [elf, hobbit, goblin]
+cards_comp = [dragon, orc, arel]
+
+# 1. DIŞ DÖNGÜ: Oyunun genel akışını kontrol eden ana döngü
+while True:
+    
+    # 2. KONTROL: Destende kart kalmış mı?
+    if len(cards) == 0:
+        print("\nÜzgünüm, destendeki tüm kartlar bitti!")
+        print("KAYBETTİNİZ!")
+        break
+    
+    # 2. KONTROL: Rakibin destesinde kart kalmış mı?
+    if len(cards_comp) == 0:
+        print("\nTebrikler, rakibin tüm kartlarını yendin!")
+        print("KAZANDINIZ!")
+        break
+
+    print('\n----------------------------------------')
+    print('Destendeki kartlar:')
+    if elf in cards:
+        print('- Elf')
+    if hobbit in cards:
+        print('- Hobbit')
+    if goblin in cards:
+        print('- Goblin')
+
+    # Oyuncu kart seçimi
+    card_name = input('\nSıra sizde! Hangi kartı seçeceksiniz? (Elf / Hobbit / Goblin): ')
+
+    # 4. KONTROL: Kart destede var mı ve daha önce silinmiş mi?
+    selected_card = None
+    if card_name == 'Elf' and elf in cards:
+        selected_card = elf
+    elif card_name == 'Hobbit' and hobbit in cards:
+        selected_card = hobbit
+    elif card_name == 'Goblin' and goblin in cards:
+        selected_card = goblin
+    else:
+        print('Geçersiz kart seçtiniz veya bu kart zaten destenizde yok!')
+        continue # Döngünün başına dön
+
+    time.sleep(1)
+
+    # Bilgisayar kart seçimi
+    card_comp = random.choice(cards_comp)
+
+    # Bilgisayarın seçtiği kartı ekrana yazdırma
+    if card_comp == dragon:
+        print('Rakibin kartı: Ejderha')
+    elif card_comp == orc:
+        print('Rakibin kartı: Ork')
+    else:
+        print('Rakibin kartı: Arel')
+
+    print('Rakip kartının özellikleri:', card_comp)
+
+    # İÇ DÖNGÜ: Savaş döngüsü
+    while True:
+        print('\nSaldırıyorsunuz!')
+        time.sleep(1.5)
+
+        if selected_card['Güç'] >= card_comp['Sağlık']:
+            print('Rakip kart yenildi!')
+            # 3. KONTROL: Kaybeden rakip kartı listeden siliniyor
+            cards_comp.remove(card_comp)
+            print('Rakibin kartı destesinden silindi.')
+            break
+
+        card_comp['Sağlık'] -= selected_card['Güç']
+        print('Rakip yaralandы!')
+        print('Rakibin kalan sağlığı:', card_comp['Sağlık'])
+
+        print('\nRakip sırası!')
+        time.sleep(1.5)
+
+        if card_comp['Güç'] >= selected_card['Sağlık']:
+            print('Kartınız yenildi!')
+            # 3. KONTROL: Kaybeden senin kartın listeden siliniyor
+            cards.remove(selected_card)
+            print('Kartınız destenizden silindi.')
+            break
+
+        selected_card['Sağlık'] -= card_comp['Gyç'] # (Güç)
+        selected_card['Sağlık'] -= card_comp['Güç']
+        print('Yaralandınız!')
+        print('Kalan sağlığınız:', selected_card['Sağlık'])
